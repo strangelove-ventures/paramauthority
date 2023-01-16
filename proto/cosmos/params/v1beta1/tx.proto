@@ -1,0 +1,28 @@
+syntax = "proto3";
+package cosmos.params.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/params/v1beta1/params.proto";
+
+option go_package = "github.com/cosmos/cosmos-sdk/x/params/types/proposal";
+
+// Query defines the gRPC querier service.
+service Msg {
+  // Params queries a specific parameter of a module, given its subspace and
+  // key.
+  rpc UpdateParams(UpdateParamsRequest) returns (UpdateParamsResponse) {}
+}
+
+// UpdateParamsRequest is request type for the Query/Params RPC method.
+message UpdateParamsRequest {
+  string authority = 1;
+
+  ParameterChangeProposal change_proposal = 2;
+}
+
+// UpdateParamsResponse is response type for the Query/Params RPC method.
+message UpdateParamsResponse {
+  // param defines the queried parameter.
+  ParamChange param = 1 [(gogoproto.nullable) = false];
+}
