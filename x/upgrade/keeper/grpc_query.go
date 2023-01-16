@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
 var _ types.QueryServer = Keeper{}

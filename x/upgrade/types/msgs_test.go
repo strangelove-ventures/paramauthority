@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
 var authority = sdk.AccAddress("authority")
