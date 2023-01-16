@@ -7,10 +7,10 @@ import (
 	neturl "net/url"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"strings"
-
-	"github.com/cosmos/cosmos-sdk/internal/conv"
+	"unsafe"
 )
 
 // Info is the special structure that the Plan.Info string can be (as json).
@@ -40,7 +40,7 @@ func ParseInfo(infoStr string) (*Info, error) {
 
 	// Now, try to parse it into the expected structure.
 	var planInfo Info
-	if err := json.Unmarshal(conv.UnsafeStrToBytes(infoStr), &planInfo); err != nil {
+	if err := json.Unmarshal(unsafeStrToBytes(infoStr), &planInfo); err != nil {
 		return nil, fmt.Errorf("could not parse plan info: %v", err)
 	}
 
@@ -106,4 +106,16 @@ func (m BinaryDownloadURLMap) CheckURLs(daemonName string) error {
 		}
 	}
 	return nil
+}
+
+// UnsafeStrToBytes uses unsafe to convert string into byte array. Returned bytes
+// must not be altered after this function is called as it will cause a segmentation fault.
+func unsafeStrToBytes(s string) []byte {
+	var buf []byte
+	sHdr := (*reflect.StringHeader)(unsafe.Pointer(&s))
+	bufHdr := (*reflect.SliceHeader)(unsafe.Pointer(&buf))
+	bufHdr.Data = sHdr.Data
+	bufHdr.Cap = sHdr.Len
+	bufHdr.Len = sHdr.Len
+	return buf
 }
