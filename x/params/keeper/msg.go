@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	types "github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 )
 
 type msgServer struct {
@@ -22,14 +24,14 @@ func NewMsgServerImpl(k Keeper) types.MsgServer {
 var _ types.MsgServer = msgServer{}
 
 // SoftwareUpgrade implements the Msg/SoftwareUpgrade Msg service.
-func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
+func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParamsRequest) (*types.MsgUpdateParamsResponse, error) {
 	if k.authority != req.Authority {
 		return nil, fmt.Errorf("expected %s got %s", k.authority, req.Authority)
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	for _, c := range req.Changes {
+	for _, c := range req.ChangeProposal.Changes {
 		ss, ok := k.GetSubspace(c.Subspace)
 		if !ok {
 			return nil, fmt.Errorf("unknwon subspace, %s", c.Subspace)
@@ -40,9 +42,9 @@ func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParam
 		)
 
 		if err := ss.Update(ctx, []byte(c.Key), []byte(c.Value)); err != nil {
-			return nil, fmt.Errorf("key: %s, value: %s, err: %s: %w", c.Key, c.Value, err.Error())
+			return nil, fmt.Errorf("key: %s, value: %s, err: %w", c.Key, c.Value, err)
 		}
 	}
 
-	return &types.MsgSoftwareUpgradeResponse{}, nil
+	return &types.MsgUpdateParamsResponse{}, nil
 }
