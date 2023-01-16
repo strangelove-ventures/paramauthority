@@ -7,10 +7,8 @@ import "cosmos/params/v1beta1/params.proto";
 
 option go_package = "github.com/cosmos/cosmos-sdk/x/params/types/proposal";
 
-// Query defines the gRPC querier service.
+// Msg defines the gRPC msg service.
 service Msg {
-  // Params queries a specific parameter of a module, given its subspace and
-  // key.
   rpc UpdateParams(UpdateParamsRequest) returns (UpdateParamsResponse) {}
 }
 
