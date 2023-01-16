@@ -169,7 +169,7 @@ func (k Keeper) getModuleVersion(ctx sdk.Context, name string) (uint64, bool) {
 // If there is another Plan already scheduled, it will cancel and overwrite it.
 // ScheduleUpgrade will also write the upgraded IBC ClientState to the upgraded client
 // path if it is specified in the plan.
-func (k Keeper) ScheduleUpgrade(ctx sdk.Context, plan types.Plan) error {
+func (k Keeper) ScheduleUpgrade(ctx sdk.Context, plan sdkupgradetypes.Plan) error {
 	if err := plan.ValidateBasic(); err != nil {
 		return err
 	}
