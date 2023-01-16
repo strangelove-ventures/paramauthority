@@ -7,11 +7,11 @@ option go_package = "github.com/cosmos/cosmos-sdk/x/params/types/proposal";
 
 // Msg defines the gRPC msg service.
 service Msg {
-  rpc UpdateParams(MsgUpdateParamsRequest) returns (MsgUpdateParamsResponse);
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
 }
 
 // UpdateParamsRequest is request type for the Query/Params RPC method.
-message MsgUpdateParamsRequest {
+message MsgUpdateParams {
   string authority = 1;
 
   ParameterChangeProposal change_proposal = 2;
