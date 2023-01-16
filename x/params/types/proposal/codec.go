@@ -3,7 +3,8 @@ package proposal
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // RegisterLegacyAminoCodec registers all necessary param module types with a given LegacyAmino codec.
@@ -12,8 +13,25 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
-	registry.RegisterImplementations(
-		(*govtypes.Content)(nil),
-		&ParameterChangeProposal{},
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgUpdateParams{},
 	)
+}
+
+var (
+	amino = codec.NewLegacyAmino()
+
+	// ModuleCdc references the global x/staking module codec. Note, the codec should
+	// ONLY be used in certain instances of tests and for JSON encoding as Amino is
+	// still used for that purpose.
+	//
+	// The actual codec used for serialization should be provided to x/staking and
+	// defined at the application level.
+	ModuleCdc = codec.NewAminoCodec(amino)
+)
+
+func init() {
+	RegisterLegacyAminoCodec(amino)
+	cryptocodec.RegisterCrypto(amino)
+	amino.Seal()
 }

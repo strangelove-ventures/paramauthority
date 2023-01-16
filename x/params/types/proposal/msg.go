@@ -26,10 +26,6 @@ func (m *MsgUpdateParams) ValidateBasic() error {
 		return sdkerrors.Wrap(err, "authority")
 	}
 
-	if err := m.Plan.ValidateBasic(); err != nil {
-		return sdkerrors.Wrap(err, "plan")
-	}
-
 	return nil
 }
 

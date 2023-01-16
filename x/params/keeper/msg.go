@@ -24,7 +24,7 @@ func NewMsgServerImpl(k Keeper) types.MsgServer {
 var _ types.MsgServer = msgServer{}
 
 // SoftwareUpgrade implements the Msg/SoftwareUpgrade Msg service.
-func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParamsRequest) (*types.MsgUpdateParamsResponse, error) {
+func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
 	if k.authority != req.Authority {
 		return nil, fmt.Errorf("expected %s got %s", k.authority, req.Authority)
 	}
