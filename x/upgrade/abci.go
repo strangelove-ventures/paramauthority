@@ -8,6 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/keeper"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
@@ -95,6 +96,6 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 }
 
 // BuildUpgradeNeededMsg prints the message that notifies that an upgrade is needed.
-func BuildUpgradeNeededMsg(plan types.Plan) string {
+func BuildUpgradeNeededMsg(plan sdkupgradetypes.Plan) string {
 	return fmt.Sprintf("UPGRADE \"%s\" NEEDED at %s: %s", plan.Name, plan.DueAt(), plan.Info)
 }
