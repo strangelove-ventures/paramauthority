@@ -16,16 +16,18 @@ type Keeper struct {
 	key         sdk.StoreKey
 	tkey        sdk.StoreKey
 	spaces      map[string]*types.Subspace
+	authority   string
 }
 
 // NewKeeper constructs a params keeper
-func NewKeeper(cdc codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey sdk.StoreKey) Keeper {
+func NewKeeper(cdc codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey sdk.StoreKey, authority string) Keeper {
 	return Keeper{
 		cdc:         cdc,
 		legacyAmino: legacyAmino,
 		key:         key,
 		tkey:        tkey,
 		spaces:      make(map[string]*types.Subspace),
+		authority:   authority,
 	}
 }
 
