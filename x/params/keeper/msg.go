@@ -25,11 +25,16 @@ var _ types.MsgServer = msgServer{}
 
 // SoftwareUpgrade implements the Msg/SoftwareUpgrade Msg service.
 func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
-	if k.authority != req.Authority {
-		return nil, fmt.Errorf("expected %s got %s", k.authority, req.Authority)
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	authority, found := k.Keeper.GetAuthority(ctx)
+	if !found {
+		return nil, fmt.Errorf("authority does not exist")
 	}
 
-	ctx := sdk.UnwrapSDKContext(goCtx)
+	if authority != req.Authority {
+		return nil, fmt.Errorf("expected %s got %s", authority, req.Authority)
+	}
 
 	for _, c := range req.ChangeProposal.Changes {
 		ss, ok := k.GetSubspace(c.Subspace)

@@ -1,0 +1,11 @@
+syntax = "proto3";
+package cosmos.params.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package            = "github.com/cosmos/cosmos-sdk/x/params/types/proposal";
+
+// GenesisState defines the param module's genesis state.
+message GenesisState {
+  string authority = 1;
+}

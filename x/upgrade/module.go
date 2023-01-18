@@ -14,6 +14,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/client/cli"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/keeper"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
@@ -111,13 +112,19 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 }
 
 // InitGenesis is ignored, no sense in serializing future upgrades
-func (am AppModule) InitGenesis(_ sdk.Context, _ codec.JSONCodec, _ json.RawMessage) []abci.ValidatorUpdate {
+func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) []abci.ValidatorUpdate {
+	var genState proposal.GenesisState
+	// Initialize global index to index in genesis state
+	cdc.MustUnmarshalJSON(gs, &genState)
+
+	am.keeper.SetAuthority(ctx, genState.Authority)
+
 	return []abci.ValidatorUpdate{}
 }
 
 // DefaultGenesis is an empty object
-func (AppModuleBasic) DefaultGenesis(_ codec.JSONCodec) json.RawMessage {
-	return []byte("{}")
+func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
+	return cdc.MustMarshalJSON(proposal.DefaultGenesis())
 }
 
 // ValidateGenesis is always successful, as we ignore the value
@@ -126,8 +133,17 @@ func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, config client.TxEncodin
 }
 
 // ExportGenesis is always empty, as InitGenesis does nothing either
-func (am AppModule) ExportGenesis(_ sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	return am.DefaultGenesis(cdc)
+func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
+	authority, found := am.keeper.GetAuthority(ctx)
+	if !found {
+		return am.DefaultGenesis(cdc)
+	}
+
+	genState := &proposal.GenesisState{
+		Authority: authority,
+	}
+
+	return cdc.MustMarshalJSON(genState)
 }
 
 // ConsensusVersion implements AppModule/ConsensusVersion.

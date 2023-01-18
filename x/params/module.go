@@ -20,8 +20,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/params/client/cli"
 	"github.com/cosmos/cosmos-sdk/x/params/simulation"
 	"github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/cosmos/cosmos-sdk/x/params/types/proposal"
+	sdkproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
 	"github.com/strangelove-ventures/paramauthority/x/params/keeper"
+	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 )
 
 var (
@@ -35,17 +36,19 @@ type AppModuleBasic struct{}
 
 // Name returns the params module's name.
 func (AppModuleBasic) Name() string {
-	return proposal.ModuleName
+	return sdkproposal.ModuleName
 }
 
 // RegisterLegacyAminoCodec registers the params module's types on the given LegacyAmino codec.
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	proposal.RegisterLegacyAminoCodec(cdc)
+	sdkproposal.RegisterLegacyAminoCodec(cdc)
 }
 
 // DefaultGenesis returns default genesis state as raw bytes for the params
 // module.
-func (AppModuleBasic) DefaultGenesis(_ codec.JSONCodec) json.RawMessage { return nil }
+func (AppModuleBasic) DefaultGenesis(_ codec.JSONCodec) json.RawMessage {
+	return []byte("{}")
+}
 
 // ValidateGenesis performs genesis state validation for the params module.
 func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, config client.TxEncodingConfig, _ json.RawMessage) error {
@@ -57,7 +60,7 @@ func (AppModuleBasic) RegisterRESTRoutes(_ client.Context, _ *mux.Router) {}
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the params module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	proposal.RegisterQueryHandlerClient(context.Background(), mux, proposal.NewQueryClient(clientCtx))
+	sdkproposal.RegisterQueryHandlerClient(context.Background(), mux, sdkproposal.NewQueryClient(clientCtx))
 }
 
 // GetTxCmd returns no root tx command for the params module.
@@ -69,7 +72,7 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 }
 
 func (am AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) {
-	proposal.RegisterInterfaces(registry)
+	sdkproposal.RegisterInterfaces(registry)
 }
 
 // AppModule implements an application module for the distribution module.
@@ -89,8 +92,13 @@ func NewAppModule(k keeper.Keeper) AppModule {
 
 func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
 
-// InitGenesis performs a no-op.
-func (am AppModule) InitGenesis(_ sdk.Context, _ codec.JSONCodec, _ json.RawMessage) []abci.ValidatorUpdate {
+func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) []abci.ValidatorUpdate {
+	var genState proposal.GenesisState
+	// Initialize global index to index in genesis state
+	cdc.MustUnmarshalJSON(gs, &genState)
+
+	am.keeper.SetAuthority(ctx, genState.Authority)
+
 	return []abci.ValidatorUpdate{}
 }
 
@@ -110,7 +118,7 @@ func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sd
 // RegisterServices registers a gRPC query service to respond to the
 // module-specific gRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	proposal.RegisterQueryServer(cfg.QueryServer(), am.keeper)
+	sdkproposal.RegisterQueryServer(cfg.QueryServer(), am.keeper)
 }
 
 // ProposalContents returns all the params content functions used to
@@ -133,8 +141,17 @@ func (am AppModule) WeightedOperations(_ module.SimulationState) []simtypes.Weig
 }
 
 // ExportGenesis performs a no-op.
-func (am AppModule) ExportGenesis(_ sdk.Context, _ codec.JSONCodec) json.RawMessage {
-	return nil
+func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
+	authority, found := am.keeper.GetAuthority(ctx)
+	if !found {
+		return am.DefaultGenesis(cdc)
+	}
+
+	genState := &proposal.GenesisState{
+		Authority: authority,
+	}
+
+	return cdc.MustMarshalJSON(genState)
 }
 
 // ConsensusVersion implements AppModule/ConsensusVersion.
