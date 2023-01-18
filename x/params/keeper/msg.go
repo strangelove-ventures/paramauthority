@@ -38,7 +38,7 @@ func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParam
 	}
 
 	for _, c := range req.ChangeProposal.Changes {
-		ss, ok := k.GetSubspace(c.Subspace)
+		ss, ok := k.Keeper.Keeper.GetSubspace(c.Subspace)
 		if !ok {
 			return nil, fmt.Errorf("unknown subspace, %s", c.Subspace)
 		}
