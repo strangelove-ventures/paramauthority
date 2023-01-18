@@ -17,20 +17,24 @@ type Keeper struct {
 }
 
 // NewKeeper constructs a params keeper
-func NewKeeper(cdc codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey sdk.StoreKey, paramSpace types.Subspace) Keeper {
+func NewKeeper(cdc codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey sdk.StoreKey) Keeper {
+	paramsKeeper := keeper.NewKeeper(
+		cdc,
+		legacyAmino,
+		key,
+		tkey,
+	)
+	k := Keeper{
+		Keeper:     paramsKeeper,
+		paramSpace: paramsKeeper.Subspace(types.ModuleName),
+	}
+
 	// set KeyTable if it has not already been set
-	if !paramSpace.HasKeyTable() {
-		paramSpace = paramSpace.WithKeyTable(proposal.ParamKeyTable())
+	if !k.paramSpace.HasKeyTable() {
+		k.paramSpace = k.paramSpace.WithKeyTable(proposal.ParamKeyTable())
 	}
-	return Keeper{
-		Keeper: keeper.NewKeeper(
-			cdc,
-			legacyAmino,
-			key,
-			tkey,
-		),
-		paramSpace: paramSpace,
-	}
+
+	return k
 }
 
 // Logger returns a module-specific logger.
