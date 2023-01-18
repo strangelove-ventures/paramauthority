@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	sdkparamstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	xp "github.com/cosmos/cosmos-sdk/x/upgrade/exported"
 	sdkupgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
@@ -19,7 +20,7 @@ const UpgradeInfoFileName string = "upgrade-info.json"
 
 type Keeper struct {
 	sdkupgradekeeper.Keeper
-	storeKey storetypes.StoreKey // key to access x/upgrade store
+	paramSpace sdkparamstypes.Subspace
 }
 
 // NewKeeper constructs an upgrade Keeper which requires the following arguments:
@@ -28,10 +29,10 @@ type Keeper struct {
 // cdc - the app-wide binary codec
 // homePath - root directory of the application's config
 // vs - the interface implemented by baseapp which allows setting baseapp's protocol version field
-func NewKeeper(skipUpgradeHeights map[int64]bool, storeKey storetypes.StoreKey, cdc codec.BinaryCodec, homePath string, vs xp.ProtocolVersionSetter) Keeper {
+func NewKeeper(skipUpgradeHeights map[int64]bool, storeKey storetypes.StoreKey, cdc codec.BinaryCodec, homePath string, vs xp.ProtocolVersionSetter, paramSpace sdkparamstypes.Subspace) Keeper {
 	return Keeper{
-		Keeper:   sdkupgradekeeper.NewKeeper(skipUpgradeHeights, storeKey, cdc, homePath, vs),
-		storeKey: storeKey,
+		Keeper:     sdkupgradekeeper.NewKeeper(skipUpgradeHeights, storeKey, cdc, homePath, vs),
+		paramSpace: paramSpace,
 	}
 }
 

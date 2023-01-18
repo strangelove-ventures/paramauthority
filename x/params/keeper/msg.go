@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 	types "github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 )
 
@@ -27,9 +28,9 @@ var _ types.MsgServer = msgServer{}
 func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	authority, found := k.Keeper.GetAuthority(ctx)
-	if !found {
-		return nil, fmt.Errorf("authority does not exist")
+	authority := k.Keeper.GetAuthority(ctx)
+	if err := proposal.NewParams(authority).Validate(); err != nil {
+		return nil, err
 	}
 
 	if authority != req.Authority {

@@ -1,4 +1,4 @@
-package proposal
+package types
 
 const (
 	AuthorityKey = "authority"

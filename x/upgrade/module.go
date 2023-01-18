@@ -19,7 +19,6 @@ import (
 	sdkupgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
-	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/keeper"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
@@ -116,18 +115,18 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 
 // InitGenesis is ignored, no sense in serializing future upgrades
 func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) []abci.ValidatorUpdate {
-	var genState proposal.GenesisState
+	var genState types.GenesisState
 	// Initialize global index to index in genesis state
 	cdc.MustUnmarshalJSON(gs, &genState)
 
-	am.keeper.SetAuthority(ctx, genState.Authority)
+	am.keeper.SetParams(ctx, genState.Params)
 
 	return []abci.ValidatorUpdate{}
 }
 
 // DefaultGenesis is an empty object
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
-	return cdc.MustMarshalJSON(proposal.DefaultGenesis())
+	return cdc.MustMarshalJSON(types.DefaultGenesis())
 }
 
 // ValidateGenesis is always successful, as we ignore the value
@@ -137,13 +136,10 @@ func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, config client.TxEncodin
 
 // ExportGenesis is always empty, as InitGenesis does nothing either
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	authority, found := am.keeper.GetAuthority(ctx)
-	if !found {
-		return am.DefaultGenesis(cdc)
-	}
+	authority := am.keeper.GetAuthority(ctx)
 
-	genState := &proposal.GenesisState{
-		Authority: authority,
+	genState := &types.GenesisState{
+		Params: types.NewParams(authority),
 	}
 
 	return cdc.MustMarshalJSON(genState)

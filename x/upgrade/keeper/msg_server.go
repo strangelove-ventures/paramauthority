@@ -26,9 +26,9 @@ var _ types.MsgServer = msgServer{}
 func (k msgServer) SoftwareUpgrade(goCtx context.Context, req *types.MsgSoftwareUpgrade) (*types.MsgSoftwareUpgradeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	authority, found := k.Keeper.GetAuthority(ctx)
-	if !found {
-		return nil, fmt.Errorf("authority does not exist")
+	authority := k.Keeper.GetAuthority(ctx)
+	if err := types.NewParams(authority).Validate(); err != nil {
+		return nil, err
 	}
 
 	if authority != req.Authority {
@@ -47,9 +47,9 @@ func (k msgServer) SoftwareUpgrade(goCtx context.Context, req *types.MsgSoftware
 func (k msgServer) CancelUpgrade(goCtx context.Context, req *types.MsgCancelUpgrade) (*types.MsgCancelUpgradeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	authority, found := k.Keeper.GetAuthority(ctx)
-	if !found {
-		return nil, fmt.Errorf("authority does not exist")
+	authority := k.Keeper.GetAuthority(ctx)
+	if err := types.NewParams(authority).Validate(); err != nil {
+		return nil, err
 	}
 
 	if authority != req.Authority {

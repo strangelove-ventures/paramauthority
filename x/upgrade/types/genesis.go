@@ -1,4 +1,4 @@
-package proposal
+package types
 
 // DefaultIndex is the default global index
 const DefaultIndex uint64 = 1

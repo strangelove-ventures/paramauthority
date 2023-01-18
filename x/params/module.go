@@ -100,7 +100,7 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.Ra
 	// Initialize global index to index in genesis state
 	cdc.MustUnmarshalJSON(gs, &genState)
 
-	am.keeper.SetAuthority(ctx, genState.Authority)
+	am.keeper.SetParams(ctx, genState.Params)
 
 	return []abci.ValidatorUpdate{}
 }
@@ -146,13 +146,10 @@ func (am AppModule) WeightedOperations(_ module.SimulationState) []simtypes.Weig
 
 // ExportGenesis performs a no-op.
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	authority, found := am.keeper.GetAuthority(ctx)
-	if !found {
-		return am.DefaultGenesis(cdc)
-	}
+	authority := am.keeper.GetAuthority(ctx)
 
 	genState := &proposal.GenesisState{
-		Authority: authority,
+		Params: proposal.NewParams(authority),
 	}
 
 	return cdc.MustMarshalJSON(genState)

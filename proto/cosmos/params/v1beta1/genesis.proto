@@ -7,5 +7,10 @@ option go_package            = "github.com/cosmos/cosmos-sdk/x/params/types/prop
 
 // GenesisState defines the param module's genesis state.
 message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// Params defines the set of params module parameters.
+message Params {
   string authority = 1;
 }

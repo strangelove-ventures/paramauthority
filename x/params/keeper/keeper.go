@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -12,11 +13,15 @@ import (
 // Keeper of the global paramstore
 type Keeper struct {
 	keeper.Keeper
-	storeKey sdk.StoreKey
+	paramSpace types.Subspace
 }
 
 // NewKeeper constructs a params keeper
-func NewKeeper(cdc codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey sdk.StoreKey) Keeper {
+func NewKeeper(cdc codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey sdk.StoreKey, paramSpace types.Subspace) Keeper {
+	// set KeyTable if it has not already been set
+	if !paramSpace.HasKeyTable() {
+		paramSpace = paramSpace.WithKeyTable(proposal.ParamKeyTable())
+	}
 	return Keeper{
 		Keeper: keeper.NewKeeper(
 			cdc,
@@ -24,7 +29,7 @@ func NewKeeper(cdc codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey 
 			key,
 			tkey,
 		),
-		storeKey: key,
+		paramSpace: paramSpace,
 	}
 }
 
