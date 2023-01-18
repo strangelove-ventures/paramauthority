@@ -16,6 +16,8 @@ import (
 	io "io"
 	math "math"
 	math_bits "math/bits"
+
+	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -36,7 +38,7 @@ type MsgSoftwareUpgrade struct {
 	// authority is the address of the governance account.
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
 	// plan is the upgrade plan.
-	Plan Plan `protobuf:"bytes,2,opt,name=plan,proto3" json:"plan"`
+	Plan sdkupgradetypes.Plan `protobuf:"bytes,2,opt,name=plan,proto3" json:"plan"`
 }
 
 func (m *MsgSoftwareUpgrade) Reset()         { *m = MsgSoftwareUpgrade{} }
@@ -79,11 +81,11 @@ func (m *MsgSoftwareUpgrade) GetAuthority() string {
 	return ""
 }
 
-func (m *MsgSoftwareUpgrade) GetPlan() Plan {
+func (m *MsgSoftwareUpgrade) GetPlan() sdkupgradetypes.Plan {
 	if m != nil {
 		return m.Plan
 	}
-	return Plan{}
+	return sdkupgradetypes.Plan{}
 }
 
 // MsgSoftwareUpgradeResponse is the Msg/SoftwareUpgrade response type.

@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
@@ -22,7 +23,7 @@ func TestMsgSoftwareUpgrade(t *testing.T) {
 			"invalid authority address",
 			&types.MsgSoftwareUpgrade{
 				Authority: "authority",
-				Plan: types.Plan{
+				Plan: sdkupgradetypes.Plan{
 					Name:   "all-good",
 					Height: 123450000,
 				},
@@ -34,7 +35,7 @@ func TestMsgSoftwareUpgrade(t *testing.T) {
 			"invalid plan",
 			&types.MsgSoftwareUpgrade{
 				Authority: authority.String(),
-				Plan: types.Plan{
+				Plan: sdkupgradetypes.Plan{
 					Height: 123450000,
 				},
 			},
@@ -45,7 +46,7 @@ func TestMsgSoftwareUpgrade(t *testing.T) {
 			"all good",
 			&types.MsgSoftwareUpgrade{
 				Authority: authority.String(),
-				Plan: types.Plan{
+				Plan: sdkupgradetypes.Plan{
 					Name:   "all-good",
 					Height: 123450000,
 				},

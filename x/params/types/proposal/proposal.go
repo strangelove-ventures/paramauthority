@@ -7,6 +7,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	sdkproposaltypes "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
 )
 
 const (
@@ -18,8 +19,8 @@ const (
 var _ govtypes.Content = &ParameterChangeProposal{}
 
 func init() {
-	govtypes.RegisterProposalType(ProposalTypeChange)
-	govtypes.RegisterProposalTypeCodec(&ParameterChangeProposal{}, "cosmos-sdk/ParameterChangeProposal")
+	// govtypes.RegisterProposalType(ProposalTypeChange)
+	// govtypes.RegisterProposalTypeCodec(&ParameterChangeProposal{}, "cosmos-sdk/ParameterChangeProposal")
 }
 
 func NewParameterChangeProposal(title, description string, changes []ParamChange) *ParameterChangeProposal {
@@ -83,18 +84,18 @@ func (pc ParamChange) String() string {
 // returns an error if any ParamChange is invalid.
 func ValidateChanges(changes []ParamChange) error {
 	if len(changes) == 0 {
-		return ErrEmptyChanges
+		return sdkproposaltypes.ErrEmptyChanges
 	}
 
 	for _, pc := range changes {
 		if len(pc.Subspace) == 0 {
-			return ErrEmptySubspace
+			return sdkproposaltypes.ErrEmptySubspace
 		}
 		if len(pc.Key) == 0 {
-			return ErrEmptyKey
+			return sdkproposaltypes.ErrEmptyKey
 		}
 		if len(pc.Value) == 0 {
-			return ErrEmptyValue
+			return sdkproposaltypes.ErrEmptyValue
 		}
 	}
 

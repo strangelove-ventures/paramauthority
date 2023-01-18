@@ -21,6 +21,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/status"
+
+	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 )
 
 // Suppress "imported and not used" errors
@@ -32,7 +34,7 @@ var _ = utilities.NewDoubleArray
 var _ = descriptor.ForMessage
 
 func request_Query_CurrentPlan_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryCurrentPlanRequest
+	var protoReq sdkupgradetypes.QueryCurrentPlanRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.CurrentPlan(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -41,7 +43,7 @@ func request_Query_CurrentPlan_0(ctx context.Context, marshaler runtime.Marshale
 }
 
 func local_request_Query_CurrentPlan_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryCurrentPlanRequest
+	var protoReq sdkupgradetypes.QueryCurrentPlanRequest
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.CurrentPlan(ctx, &protoReq)
@@ -50,7 +52,7 @@ func local_request_Query_CurrentPlan_0(ctx context.Context, marshaler runtime.Ma
 }
 
 func request_Query_AppliedPlan_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAppliedPlanRequest
+	var protoReq sdkupgradetypes.QueryAppliedPlanRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -77,7 +79,7 @@ func request_Query_AppliedPlan_0(ctx context.Context, marshaler runtime.Marshale
 }
 
 func local_request_Query_AppliedPlan_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryAppliedPlanRequest
+	var protoReq sdkupgradetypes.QueryAppliedPlanRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -104,7 +106,7 @@ func local_request_Query_AppliedPlan_0(ctx context.Context, marshaler runtime.Ma
 }
 
 func request_Query_UpgradedConsensusState_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryUpgradedConsensusStateRequest
+	var protoReq sdkupgradetypes.QueryUpgradedConsensusStateRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -131,7 +133,7 @@ func request_Query_UpgradedConsensusState_0(ctx context.Context, marshaler runti
 }
 
 func local_request_Query_UpgradedConsensusState_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryUpgradedConsensusStateRequest
+	var protoReq sdkupgradetypes.QueryUpgradedConsensusStateRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -162,7 +164,7 @@ var (
 )
 
 func request_Query_ModuleVersions_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryModuleVersionsRequest
+	var protoReq sdkupgradetypes.QueryModuleVersionsRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -178,7 +180,7 @@ func request_Query_ModuleVersions_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func local_request_Query_ModuleVersions_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryModuleVersionsRequest
+	var protoReq sdkupgradetypes.QueryModuleVersionsRequest
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {

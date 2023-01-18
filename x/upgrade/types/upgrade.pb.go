@@ -144,6 +144,12 @@ type CancelSoftwareUpgradeProposal struct {
 }
 
 func (m *CancelSoftwareUpgradeProposal) Reset()      { *m = CancelSoftwareUpgradeProposal{} }
+func (m *CancelSoftwareUpgradeProposal) String() string {
+	return fmt.Sprintf(`Cancel Software Upgrade Proposal:
+  Title:       %s
+  Description: %s
+`, m.Title, m.Description)
+}
 func (*CancelSoftwareUpgradeProposal) ProtoMessage() {}
 func (*CancelSoftwareUpgradeProposal) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ccf2a7d4d7b48dca, []int{2}

@@ -15,6 +15,8 @@ import (
 	io "io"
 	math "math"
 	math_bits "math/bits"
+
+	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -567,20 +569,20 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
 	// CurrentPlan queries the current upgrade plan.
-	CurrentPlan(ctx context.Context, in *QueryCurrentPlanRequest, opts ...grpc.CallOption) (*QueryCurrentPlanResponse, error)
+	CurrentPlan(ctx context.Context, in *sdkupgradetypes.QueryCurrentPlanRequest, opts ...grpc.CallOption) (*sdkupgradetypes.QueryCurrentPlanResponse, error)
 	// AppliedPlan queries a previously applied upgrade plan by its name.
-	AppliedPlan(ctx context.Context, in *QueryAppliedPlanRequest, opts ...grpc.CallOption) (*QueryAppliedPlanResponse, error)
+	AppliedPlan(ctx context.Context, in *sdkupgradetypes.QueryAppliedPlanRequest, opts ...grpc.CallOption) (*sdkupgradetypes.QueryAppliedPlanResponse, error)
 	// UpgradedConsensusState queries the consensus state that will serve
 	// as a trusted kernel for the next version of this chain. It will only be
 	// stored at the last height of this chain.
 	// UpgradedConsensusState RPC not supported with legacy querier
 	// This rpc is deprecated now that IBC has its own replacement
 	// (https://github.com/cosmos/ibc-go/blob/2c880a22e9f9cc75f62b527ca94aa75ce1106001/proto/ibc/core/client/v1/query.proto#L54)
-	UpgradedConsensusState(ctx context.Context, in *QueryUpgradedConsensusStateRequest, opts ...grpc.CallOption) (*QueryUpgradedConsensusStateResponse, error)
+	UpgradedConsensusState(ctx context.Context, in *sdkupgradetypes.QueryUpgradedConsensusStateRequest, opts ...grpc.CallOption) (*sdkupgradetypes.QueryUpgradedConsensusStateResponse, error)
 	// ModuleVersions queries the list of module versions from state.
 	//
 	// Since: cosmos-sdk 0.43
-	ModuleVersions(ctx context.Context, in *QueryModuleVersionsRequest, opts ...grpc.CallOption) (*QueryModuleVersionsResponse, error)
+	ModuleVersions(ctx context.Context, in *sdkupgradetypes.QueryModuleVersionsRequest, opts ...grpc.CallOption) (*sdkupgradetypes.QueryModuleVersionsResponse, error)
 	// Returns the account with authority to conduct upgrades
 	//
 	// Since: cosmos-sdk 0.46
@@ -595,8 +597,8 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
 }
 
-func (c *queryClient) CurrentPlan(ctx context.Context, in *QueryCurrentPlanRequest, opts ...grpc.CallOption) (*QueryCurrentPlanResponse, error) {
-	out := new(QueryCurrentPlanResponse)
+func (c *queryClient) CurrentPlan(ctx context.Context, in *sdkupgradetypes.QueryCurrentPlanRequest, opts ...grpc.CallOption) (*sdkupgradetypes.QueryCurrentPlanResponse, error) {
+	out := new(sdkupgradetypes.QueryCurrentPlanResponse)
 	err := c.cc.Invoke(ctx, "/cosmos.upgrade.v1beta1.Query/CurrentPlan", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -604,8 +606,8 @@ func (c *queryClient) CurrentPlan(ctx context.Context, in *QueryCurrentPlanReque
 	return out, nil
 }
 
-func (c *queryClient) AppliedPlan(ctx context.Context, in *QueryAppliedPlanRequest, opts ...grpc.CallOption) (*QueryAppliedPlanResponse, error) {
-	out := new(QueryAppliedPlanResponse)
+func (c *queryClient) AppliedPlan(ctx context.Context, in *sdkupgradetypes.QueryAppliedPlanRequest, opts ...grpc.CallOption) (*sdkupgradetypes.QueryAppliedPlanResponse, error) {
+	out := new(sdkupgradetypes.QueryAppliedPlanResponse)
 	err := c.cc.Invoke(ctx, "/cosmos.upgrade.v1beta1.Query/AppliedPlan", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -614,8 +616,8 @@ func (c *queryClient) AppliedPlan(ctx context.Context, in *QueryAppliedPlanReque
 }
 
 // Deprecated: Do not use.
-func (c *queryClient) UpgradedConsensusState(ctx context.Context, in *QueryUpgradedConsensusStateRequest, opts ...grpc.CallOption) (*QueryUpgradedConsensusStateResponse, error) {
-	out := new(QueryUpgradedConsensusStateResponse)
+func (c *queryClient) UpgradedConsensusState(ctx context.Context, in *sdkupgradetypes.QueryUpgradedConsensusStateRequest, opts ...grpc.CallOption) (*sdkupgradetypes.QueryUpgradedConsensusStateResponse, error) {
+	out := new(sdkupgradetypes.QueryUpgradedConsensusStateResponse)
 	err := c.cc.Invoke(ctx, "/cosmos.upgrade.v1beta1.Query/UpgradedConsensusState", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -623,8 +625,8 @@ func (c *queryClient) UpgradedConsensusState(ctx context.Context, in *QueryUpgra
 	return out, nil
 }
 
-func (c *queryClient) ModuleVersions(ctx context.Context, in *QueryModuleVersionsRequest, opts ...grpc.CallOption) (*QueryModuleVersionsResponse, error) {
-	out := new(QueryModuleVersionsResponse)
+func (c *queryClient) ModuleVersions(ctx context.Context, in *sdkupgradetypes.QueryModuleVersionsRequest, opts ...grpc.CallOption) (*sdkupgradetypes.QueryModuleVersionsResponse, error) {
+	out := new(sdkupgradetypes.QueryModuleVersionsResponse)
 	err := c.cc.Invoke(ctx, "/cosmos.upgrade.v1beta1.Query/ModuleVersions", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -644,20 +646,20 @@ func (c *queryClient) Authority(ctx context.Context, in *QueryAuthorityRequest, 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// CurrentPlan queries the current upgrade plan.
-	CurrentPlan(context.Context, *QueryCurrentPlanRequest) (*QueryCurrentPlanResponse, error)
+	CurrentPlan(context.Context, *sdkupgradetypes.QueryCurrentPlanRequest) (*sdkupgradetypes.QueryCurrentPlanResponse, error)
 	// AppliedPlan queries a previously applied upgrade plan by its name.
-	AppliedPlan(context.Context, *QueryAppliedPlanRequest) (*QueryAppliedPlanResponse, error)
+	AppliedPlan(context.Context, *sdkupgradetypes.QueryAppliedPlanRequest) (*sdkupgradetypes.QueryAppliedPlanResponse, error)
 	// UpgradedConsensusState queries the consensus state that will serve
 	// as a trusted kernel for the next version of this chain. It will only be
 	// stored at the last height of this chain.
 	// UpgradedConsensusState RPC not supported with legacy querier
 	// This rpc is deprecated now that IBC has its own replacement
 	// (https://github.com/cosmos/ibc-go/blob/2c880a22e9f9cc75f62b527ca94aa75ce1106001/proto/ibc/core/client/v1/query.proto#L54)
-	UpgradedConsensusState(context.Context, *QueryUpgradedConsensusStateRequest) (*QueryUpgradedConsensusStateResponse, error)
+	UpgradedConsensusState(context.Context, *sdkupgradetypes.QueryUpgradedConsensusStateRequest) (*sdkupgradetypes.QueryUpgradedConsensusStateResponse, error)
 	// ModuleVersions queries the list of module versions from state.
 	//
 	// Since: cosmos-sdk 0.43
-	ModuleVersions(context.Context, *QueryModuleVersionsRequest) (*QueryModuleVersionsResponse, error)
+	ModuleVersions(context.Context, *sdkupgradetypes.QueryModuleVersionsRequest) (*sdkupgradetypes.QueryModuleVersionsResponse, error)
 	// Returns the account with authority to conduct upgrades
 	//
 	// Since: cosmos-sdk 0.46
@@ -668,16 +670,16 @@ type QueryServer interface {
 type UnimplementedQueryServer struct {
 }
 
-func (*UnimplementedQueryServer) CurrentPlan(ctx context.Context, req *QueryCurrentPlanRequest) (*QueryCurrentPlanResponse, error) {
+func (*UnimplementedQueryServer) CurrentPlan(ctx context.Context, req *sdkupgradetypes.QueryCurrentPlanRequest) (*sdkupgradetypes.QueryCurrentPlanResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CurrentPlan not implemented")
 }
-func (*UnimplementedQueryServer) AppliedPlan(ctx context.Context, req *QueryAppliedPlanRequest) (*QueryAppliedPlanResponse, error) {
+func (*UnimplementedQueryServer) AppliedPlan(ctx context.Context, req *sdkupgradetypes.QueryAppliedPlanRequest) (*sdkupgradetypes.QueryAppliedPlanResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AppliedPlan not implemented")
 }
-func (*UnimplementedQueryServer) UpgradedConsensusState(ctx context.Context, req *QueryUpgradedConsensusStateRequest) (*QueryUpgradedConsensusStateResponse, error) {
+func (*UnimplementedQueryServer) UpgradedConsensusState(ctx context.Context, req *sdkupgradetypes.QueryUpgradedConsensusStateRequest) (*sdkupgradetypes.QueryUpgradedConsensusStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpgradedConsensusState not implemented")
 }
-func (*UnimplementedQueryServer) ModuleVersions(ctx context.Context, req *QueryModuleVersionsRequest) (*QueryModuleVersionsResponse, error) {
+func (*UnimplementedQueryServer) ModuleVersions(ctx context.Context, req *sdkupgradetypes.QueryModuleVersionsRequest) (*sdkupgradetypes.QueryModuleVersionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ModuleVersions not implemented")
 }
 func (*UnimplementedQueryServer) Authority(ctx context.Context, req *QueryAuthorityRequest) (*QueryAuthorityResponse, error) {
@@ -689,7 +691,7 @@ func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 }
 
 func _Query_CurrentPlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryCurrentPlanRequest)
+	in := new(sdkupgradetypes.QueryCurrentPlanRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -701,13 +703,13 @@ func _Query_CurrentPlan_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/cosmos.upgrade.v1beta1.Query/CurrentPlan",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).CurrentPlan(ctx, req.(*QueryCurrentPlanRequest))
+		return srv.(QueryServer).CurrentPlan(ctx, req.(*sdkupgradetypes.QueryCurrentPlanRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_AppliedPlan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAppliedPlanRequest)
+	in := new(sdkupgradetypes.QueryAppliedPlanRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -719,13 +721,13 @@ func _Query_AppliedPlan_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/cosmos.upgrade.v1beta1.Query/AppliedPlan",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).AppliedPlan(ctx, req.(*QueryAppliedPlanRequest))
+		return srv.(QueryServer).AppliedPlan(ctx, req.(*sdkupgradetypes.QueryAppliedPlanRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_UpgradedConsensusState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryUpgradedConsensusStateRequest)
+	in := new(sdkupgradetypes.QueryUpgradedConsensusStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -737,13 +739,13 @@ func _Query_UpgradedConsensusState_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/cosmos.upgrade.v1beta1.Query/UpgradedConsensusState",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).UpgradedConsensusState(ctx, req.(*QueryUpgradedConsensusStateRequest))
+		return srv.(QueryServer).UpgradedConsensusState(ctx, req.(*sdkupgradetypes.QueryUpgradedConsensusStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_ModuleVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryModuleVersionsRequest)
+	in := new(sdkupgradetypes.QueryModuleVersionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -755,7 +757,7 @@ func _Query_ModuleVersions_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/cosmos.upgrade.v1beta1.Query/ModuleVersions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ModuleVersions(ctx, req.(*QueryModuleVersionsRequest))
+		return srv.(QueryServer).ModuleVersions(ctx, req.(*sdkupgradetypes.QueryModuleVersionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

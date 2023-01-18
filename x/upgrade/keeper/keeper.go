@@ -20,6 +20,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	xp "github.com/cosmos/cosmos-sdk/x/upgrade/exported"
+	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
@@ -28,14 +29,14 @@ import (
 const UpgradeInfoFileName string = "upgrade-info.json"
 
 type Keeper struct {
-	homePath           string                          // root directory of app config
-	skipUpgradeHeights map[int64]bool                  // map of heights to skip for an upgrade
-	storeKey           storetypes.StoreKey             // key to access x/upgrade store
-	cdc                codec.BinaryCodec               // App-wide binary codec
-	upgradeHandlers    map[string]types.UpgradeHandler // map of plan name to upgrade handler
-	versionSetter      xp.ProtocolVersionSetter        // implements setting the protocol version field on BaseApp
-	downgradeVerified  bool                            // tells if we've already sanity checked that this binary version isn't being used against an old state.
-	authority          string                          // the address capable of executing and cancelling an upgrade. Usually the gov module account
+	homePath           string                                    // root directory of app config
+	skipUpgradeHeights map[int64]bool                            // map of heights to skip for an upgrade
+	storeKey           storetypes.StoreKey                       // key to access x/upgrade store
+	cdc                codec.BinaryCodec                         // App-wide binary codec
+	upgradeHandlers    map[string]sdkupgradetypes.UpgradeHandler // map of plan name to upgrade handler
+	versionSetter      xp.ProtocolVersionSetter                  // implements setting the protocol version field on BaseApp
+	downgradeVerified  bool                                      // tells if we've already sanity checked that this binary version isn't being used against an old state.
+	authority          string                                    // the address capable of executing and cancelling an upgrade. Usually the gov module account
 }
 
 // NewKeeper constructs an upgrade Keeper which requires the following arguments:
@@ -50,7 +51,7 @@ func NewKeeper(skipUpgradeHeights map[int64]bool, storeKey storetypes.StoreKey, 
 		skipUpgradeHeights: skipUpgradeHeights,
 		storeKey:           storeKey,
 		cdc:                cdc,
-		upgradeHandlers:    map[string]types.UpgradeHandler{},
+		upgradeHandlers:    map[string]sdkupgradetypes.UpgradeHandler{},
 		versionSetter:      vs,
 		authority:          authority,
 	}
@@ -59,7 +60,7 @@ func NewKeeper(skipUpgradeHeights map[int64]bool, storeKey storetypes.StoreKey, 
 // SetUpgradeHandler sets an UpgradeHandler for the upgrade specified by name. This handler will be called when the upgrade
 // with this name is applied. In order for an upgrade with the given name to proceed, a handler for this upgrade
 // must be set even if it is a no-op function.
-func (k Keeper) SetUpgradeHandler(name string, upgradeHandler types.UpgradeHandler) {
+func (k Keeper) SetUpgradeHandler(name string, upgradeHandler sdkupgradetypes.UpgradeHandler) {
 	k.upgradeHandlers[name] = upgradeHandler
 }
 
@@ -130,17 +131,17 @@ func (k Keeper) GetModuleVersionMap(ctx sdk.Context) module.VersionMap {
 }
 
 // GetModuleVersions gets a slice of module consensus versions
-func (k Keeper) GetModuleVersions(ctx sdk.Context) []*types.ModuleVersion {
+func (k Keeper) GetModuleVersions(ctx sdk.Context) []*sdkupgradetypes.ModuleVersion {
 	store := ctx.KVStore(k.storeKey)
 	it := sdk.KVStorePrefixIterator(store, []byte{types.VersionMapByte})
 	defer it.Close()
 
-	mv := make([]*types.ModuleVersion, 0)
+	mv := make([]*sdkupgradetypes.ModuleVersion, 0)
 	for ; it.Valid(); it.Next() {
 		moduleBytes := it.Key()
 		name := string(moduleBytes[1:])
 		moduleVersion := binary.BigEndian.Uint64(it.Value())
-		mv = append(mv, &types.ModuleVersion{
+		mv = append(mv, &sdkupgradetypes.ModuleVersion{
 			Name:    name,
 			Version: moduleVersion,
 		})
@@ -168,7 +169,7 @@ func (k Keeper) getModuleVersion(ctx sdk.Context, name string) (uint64, bool) {
 // If there is another Plan already scheduled, it will cancel and overwrite it.
 // ScheduleUpgrade will also write the upgraded IBC ClientState to the upgraded client
 // path if it is specified in the plan.
-func (k Keeper) ScheduleUpgrade(ctx sdk.Context, plan types.Plan) error {
+func (k Keeper) ScheduleUpgrade(ctx sdk.Context, plan sdkupgradetypes.Plan) error {
 	if err := plan.ValidateBasic(); err != nil {
 		return err
 	}
@@ -304,7 +305,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 
 // GetUpgradePlan returns the currently scheduled Plan if any, setting havePlan to true if there is a scheduled
 // upgrade or false if there is none
-func (k Keeper) GetUpgradePlan(ctx sdk.Context) (plan types.Plan, havePlan bool) {
+func (k Keeper) GetUpgradePlan(ctx sdk.Context) (plan sdkupgradetypes.Plan, havePlan bool) {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.PlanKey())
 	if bz == nil {
@@ -328,7 +329,7 @@ func (k Keeper) HasHandler(name string) bool {
 }
 
 // ApplyUpgrade will execute the handler associated with the Plan and mark the plan as done.
-func (k Keeper) ApplyUpgrade(ctx sdk.Context, plan types.Plan) {
+func (k Keeper) ApplyUpgrade(ctx sdk.Context, plan sdkupgradetypes.Plan) {
 	handler := k.upgradeHandlers[plan.Name]
 	if handler == nil {
 		panic("ApplyUpgrade should never be called without first checking HasHandler")
@@ -362,7 +363,7 @@ func (k Keeper) IsSkipHeight(height int64) bool {
 }
 
 // DumpUpgradeInfoToDisk writes upgrade information to UpgradeInfoFileName.
-func (k Keeper) DumpUpgradeInfoToDisk(height int64, p types.Plan) error {
+func (k Keeper) DumpUpgradeInfoToDisk(height int64, p sdkupgradetypes.Plan) error {
 	upgradeInfoFilePath, err := k.GetUpgradeInfoPath()
 	if err != nil {
 		return err
@@ -401,8 +402,8 @@ func (k Keeper) getHomeDir() string {
 // written to disk by the old binary when panicking. An error is returned if
 // the upgrade path directory cannot be created or if the file exists and
 // cannot be read or if the upgrade info fails to unmarshal.
-func (k Keeper) ReadUpgradeInfoFromDisk() (types.Plan, error) {
-	var upgradeInfo types.Plan
+func (k Keeper) ReadUpgradeInfoFromDisk() (sdkupgradetypes.Plan, error) {
+	var upgradeInfo sdkupgradetypes.Plan
 
 	upgradeInfoPath, err := k.GetUpgradeInfoPath()
 	if err != nil {
