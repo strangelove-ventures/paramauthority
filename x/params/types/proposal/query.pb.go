@@ -130,12 +130,12 @@ func (m *QueryParamsResponse) GetParam() ParamChange {
 	return ParamChange{}
 }
 
-func init() {
-	proto.RegisterType((*QueryParamsRequest)(nil), "cosmos.params.v1beta1.QueryParamsRequest")
-	proto.RegisterType((*QueryParamsResponse)(nil), "cosmos.params.v1beta1.QueryParamsResponse")
-}
+// func init() {
+// 	proto.RegisterType((*QueryParamsRequest)(nil), "cosmos.params.v1beta1.QueryParamsRequest")
+// 	proto.RegisterType((*QueryParamsResponse)(nil), "cosmos.params.v1beta1.QueryParamsResponse")
+// }
 
-func init() { proto.RegisterFile("cosmos/params/v1beta1/query.proto", fileDescriptor_2b32979c1792ccc4) }
+// func init() { proto.RegisterFile("cosmos/params/v1beta1/query.proto", fileDescriptor_2b32979c1792ccc4) }
 
 var fileDescriptor_2b32979c1792ccc4 = []byte{
 	// 321 bytes of a gzipped FileDescriptorProto

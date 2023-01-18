@@ -495,21 +495,21 @@ func (m *QueryAuthorityResponse) GetAddress() string {
 }
 
 func init() {
-	proto.RegisterType((*QueryCurrentPlanRequest)(nil), "cosmos.upgrade.v1beta1.QueryCurrentPlanRequest")
-	proto.RegisterType((*QueryCurrentPlanResponse)(nil), "cosmos.upgrade.v1beta1.QueryCurrentPlanResponse")
-	proto.RegisterType((*QueryAppliedPlanRequest)(nil), "cosmos.upgrade.v1beta1.QueryAppliedPlanRequest")
-	proto.RegisterType((*QueryAppliedPlanResponse)(nil), "cosmos.upgrade.v1beta1.QueryAppliedPlanResponse")
-	proto.RegisterType((*QueryUpgradedConsensusStateRequest)(nil), "cosmos.upgrade.v1beta1.QueryUpgradedConsensusStateRequest")
-	proto.RegisterType((*QueryUpgradedConsensusStateResponse)(nil), "cosmos.upgrade.v1beta1.QueryUpgradedConsensusStateResponse")
-	proto.RegisterType((*QueryModuleVersionsRequest)(nil), "cosmos.upgrade.v1beta1.QueryModuleVersionsRequest")
-	proto.RegisterType((*QueryModuleVersionsResponse)(nil), "cosmos.upgrade.v1beta1.QueryModuleVersionsResponse")
+	// proto.RegisterType((*QueryCurrentPlanRequest)(nil), "cosmos.upgrade.v1beta1.QueryCurrentPlanRequest")
+	// proto.RegisterType((*QueryCurrentPlanResponse)(nil), "cosmos.upgrade.v1beta1.QueryCurrentPlanResponse")
+	// proto.RegisterType((*QueryAppliedPlanRequest)(nil), "cosmos.upgrade.v1beta1.QueryAppliedPlanRequest")
+	// proto.RegisterType((*QueryAppliedPlanResponse)(nil), "cosmos.upgrade.v1beta1.QueryAppliedPlanResponse")
+	// proto.RegisterType((*QueryUpgradedConsensusStateRequest)(nil), "cosmos.upgrade.v1beta1.QueryUpgradedConsensusStateRequest")
+	// proto.RegisterType((*QueryUpgradedConsensusStateResponse)(nil), "cosmos.upgrade.v1beta1.QueryUpgradedConsensusStateResponse")
+	// proto.RegisterType((*QueryModuleVersionsRequest)(nil), "cosmos.upgrade.v1beta1.QueryModuleVersionsRequest")
+	// proto.RegisterType((*QueryModuleVersionsResponse)(nil), "cosmos.upgrade.v1beta1.QueryModuleVersionsResponse")
 	proto.RegisterType((*QueryAuthorityRequest)(nil), "cosmos.upgrade.v1beta1.QueryAuthorityRequest")
 	proto.RegisterType((*QueryAuthorityResponse)(nil), "cosmos.upgrade.v1beta1.QueryAuthorityResponse")
 }
 
-func init() {
-	proto.RegisterFile("cosmos/upgrade/v1beta1/query.proto", fileDescriptor_4a334d07ad8374f0)
-}
+// func init() {
+// 	proto.RegisterFile("cosmos/upgrade/v1beta1/query.proto", fileDescriptor_4a334d07ad8374f0)
+// }
 
 var fileDescriptor_4a334d07ad8374f0 = []byte{
 	// 644 bytes of a gzipped FileDescriptorProto

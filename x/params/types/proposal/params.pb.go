@@ -123,14 +123,14 @@ func (m *ParamChange) GetValue() string {
 	return ""
 }
 
-func init() {
-	proto.RegisterType((*ParameterChangeProposal)(nil), "cosmos.params.v1beta1.ParameterChangeProposal")
-	proto.RegisterType((*ParamChange)(nil), "cosmos.params.v1beta1.ParamChange")
-}
+// func init() {
+// 	proto.RegisterType((*ParameterChangeProposal)(nil), "cosmos.params.v1beta1.ParameterChangeProposal")
+// 	proto.RegisterType((*ParamChange)(nil), "cosmos.params.v1beta1.ParamChange")
+// }
 
-func init() {
-	proto.RegisterFile("cosmos/params/v1beta1/params.proto", fileDescriptor_53a944ecb0483e4c)
-}
+// func init() {
+// 	proto.RegisterFile("cosmos/params/v1beta1/params.proto", fileDescriptor_53a944ecb0483e4c)
+// }
 
 var fileDescriptor_53a944ecb0483e4c = []byte{
 	// 307 bytes of a gzipped FileDescriptorProto

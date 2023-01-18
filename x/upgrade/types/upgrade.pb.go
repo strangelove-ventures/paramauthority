@@ -224,16 +224,16 @@ func (m *ModuleVersion) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ModuleVersion proto.InternalMessageInfo
 
-func init() {
-	proto.RegisterType((*Plan)(nil), "cosmos.upgrade.v1beta1.Plan")
-	proto.RegisterType((*SoftwareUpgradeProposal)(nil), "cosmos.upgrade.v1beta1.SoftwareUpgradeProposal")
-	proto.RegisterType((*CancelSoftwareUpgradeProposal)(nil), "cosmos.upgrade.v1beta1.CancelSoftwareUpgradeProposal")
-	proto.RegisterType((*ModuleVersion)(nil), "cosmos.upgrade.v1beta1.ModuleVersion")
-}
+// func init() {
+// 	proto.RegisterType((*Plan)(nil), "cosmos.upgrade.v1beta1.Plan")
+// 	proto.RegisterType((*SoftwareUpgradeProposal)(nil), "cosmos.upgrade.v1beta1.SoftwareUpgradeProposal")
+// 	proto.RegisterType((*CancelSoftwareUpgradeProposal)(nil), "cosmos.upgrade.v1beta1.CancelSoftwareUpgradeProposal")
+// 	proto.RegisterType((*ModuleVersion)(nil), "cosmos.upgrade.v1beta1.ModuleVersion")
+// }
 
-func init() {
-	proto.RegisterFile("cosmos/upgrade/v1beta1/upgrade.proto", fileDescriptor_ccf2a7d4d7b48dca)
-}
+// func init() {
+// 	proto.RegisterFile("cosmos/upgrade/v1beta1/upgrade.proto", fileDescriptor_ccf2a7d4d7b48dca)
+// }
 
 var fileDescriptor_ccf2a7d4d7b48dca = []byte{
 	// 486 bytes of a gzipped FileDescriptorProto
