@@ -1,7 +1,8 @@
 package proposal
 
 import (
-	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // DefaultIndex is the default global index
@@ -15,8 +16,8 @@ func DefaultGenesis() *GenesisState {
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
-	if gs.Authority == "" {
-		return fmt.Errorf("authority can not be empty")
+	if _, err := sdk.AccAddressFromBech32(gs.Authority); err != nil {
+		return sdkerrors.Wrap(err, "authority")
 	}
 
 	return nil

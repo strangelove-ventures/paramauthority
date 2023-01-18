@@ -8,13 +8,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 )
 
-// RegisterLegacyAminoCodec registers concrete types on the LegacyAmino codec
-func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(Plan{}, "cosmos-sdk/Plan", nil)
-	cdc.RegisterConcrete(&SoftwareUpgradeProposal{}, "cosmos-sdk/SoftwareUpgradeProposal", nil)
-	cdc.RegisterConcrete(&CancelSoftwareUpgradeProposal{}, "cosmos-sdk/CancelSoftwareUpgradeProposal", nil)
-}
-
 func RegisterInterfaces(registry types.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSoftwareUpgrade{},
@@ -30,7 +23,6 @@ var (
 )
 
 func init() {
-	RegisterLegacyAminoCodec(amino)
 	cryptocodec.RegisterCrypto(amino)
 	sdk.RegisterLegacyAminoCodec(amino)
 }

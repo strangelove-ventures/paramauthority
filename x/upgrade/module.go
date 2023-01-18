@@ -14,18 +14,22 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	sdkupgrademodule "github.com/cosmos/cosmos-sdk/x/upgrade"
+	sdkupgradecli "github.com/cosmos/cosmos-sdk/x/upgrade/client/cli"
+	sdkupgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
+	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
 	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
-	"github.com/strangelove-ventures/paramauthority/x/upgrade/client/cli"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/keeper"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
 func init() {
-	types.RegisterLegacyAminoCodec(codec.NewLegacyAmino())
+	sdkupgradetypes.RegisterLegacyAminoCodec(codec.NewLegacyAmino())
 }
 
 const (
-	consensusVersion uint64 = 2
+	consensusVersion uint64 = 1
 )
 
 var (
@@ -38,12 +42,12 @@ type AppModuleBasic struct{}
 
 // Name returns the ModuleName
 func (AppModuleBasic) Name() string {
-	return types.ModuleName
+	return sdkupgradetypes.ModuleName
 }
 
 // RegisterLegacyAminoCodec registers the upgrade types on the LegacyAmino codec
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	types.RegisterLegacyAminoCodec(cdc)
+	sdkupgradetypes.RegisterLegacyAminoCodec(cdc)
 }
 
 // RegisterRESTRoutes registers all REST query handlers
@@ -53,14 +57,14 @@ func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, r *mux.Router
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the upgrade module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
+	if err := sdkupgradetypes.RegisterQueryHandlerClient(context.Background(), mux, sdkupgradetypes.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
 }
 
 // GetQueryCmd returns the cli query commands for this module
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return cli.GetQueryCmd()
+	return sdkupgradecli.GetQueryCmd()
 }
 
 // GetTxCmd returns the transaction commands for this module
@@ -95,20 +99,17 @@ func (AppModule) Route() sdk.Route {
 }
 
 // QuerierRoute returns the route we respond to for abci queries
-func (AppModule) QuerierRoute() string { return types.QuerierKey }
+func (AppModule) QuerierRoute() string { return sdkupgradetypes.QuerierKey }
 
 // LegacyQuerierHandler registers a query handler to respond to the module-specific queries
 func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
-	return keeper.NewQuerier(am.keeper, legacyQuerierCdc)
+	return sdkupgradekeeper.NewQuerier(am.keeper.Keeper, legacyQuerierCdc)
 }
 
 // RegisterServices registers module services.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
-	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
-
-	m := keeper.NewMigrator(am.keeper)
-	cfg.RegisterMigration(types.ModuleName, 1, m.Migrate1to2)
+	sdkupgradetypes.RegisterQueryServer(cfg.QueryServer(), am.keeper.Keeper)
 }
 
 // InitGenesis is ignored, no sense in serializing future upgrades
@@ -153,5 +154,5 @@ func (AppModule) ConsensusVersion() uint64 { return consensusVersion }
 //
 // CONTRACT: this is registered in BeginBlocker *before* all other modules' BeginBlock functions
 func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
-	BeginBlocker(am.keeper, ctx, req)
+	sdkupgrademodule.BeginBlocker(am.keeper.Keeper, ctx, req)
 }

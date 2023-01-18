@@ -18,6 +18,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/params/client/cli"
+	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/cosmos/cosmos-sdk/x/params/simulation"
 	"github.com/cosmos/cosmos-sdk/x/params/types"
 	sdkproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
@@ -112,7 +113,7 @@ func (AppModule) QuerierRoute() string { return types.QuerierRoute }
 
 // LegacyQuerierHandler returns the x/params querier handler.
 func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
-	return keeper.NewQuerier(am.keeper, legacyQuerierCdc)
+	return paramskeeper.NewQuerier(am.keeper.Keeper, legacyQuerierCdc)
 }
 
 // RegisterServices registers a gRPC query service to respond to the
