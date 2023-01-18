@@ -47,6 +47,7 @@ func (AppModuleBasic) Name() string {
 
 // RegisterLegacyAminoCodec registers the upgrade types on the LegacyAmino codec
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	types.RegisterLegacyAminoCodec(cdc)
 	sdkupgradetypes.RegisterLegacyAminoCodec(cdc)
 }
 
@@ -74,6 +75,7 @@ func (AppModuleBasic) GetTxCmd() *cobra.Command {
 
 func (b AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	types.RegisterInterfaces(registry)
+	sdkupgradetypes.RegisterInterfaces(registry)
 }
 
 // AppModule implements the sdk.AppModule interface

@@ -42,6 +42,7 @@ func (AppModuleBasic) Name() string {
 
 // RegisterLegacyAminoCodec registers the params module's types on the given LegacyAmino codec.
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	proposal.RegisterLegacyAminoCodec(cdc)
 	sdkproposal.RegisterLegacyAminoCodec(cdc)
 }
 
@@ -74,6 +75,7 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 
 func (am AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	sdkproposal.RegisterInterfaces(registry)
+	proposal.RegisterInterfaces(registry)
 }
 
 // AppModule implements an application module for the distribution module.
