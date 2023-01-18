@@ -12,6 +12,7 @@ import (
 	xp "github.com/cosmos/cosmos-sdk/x/upgrade/exported"
 	sdkupgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
 // Deprecated: UpgradeInfoFileName file to store upgrade information
@@ -30,6 +31,11 @@ type Keeper struct {
 // homePath - root directory of the application's config
 // vs - the interface implemented by baseapp which allows setting baseapp's protocol version field
 func NewKeeper(skipUpgradeHeights map[int64]bool, storeKey storetypes.StoreKey, cdc codec.BinaryCodec, homePath string, vs xp.ProtocolVersionSetter, paramSpace sdkparamstypes.Subspace) Keeper {
+	// set KeyTable if it has not already been set
+	if !paramSpace.HasKeyTable() {
+		paramSpace = paramSpace.WithKeyTable(types.ParamKeyTable())
+	}
+
 	return Keeper{
 		Keeper:     sdkupgradekeeper.NewKeeper(skipUpgradeHeights, storeKey, cdc, homePath, vs),
 		paramSpace: paramSpace,
