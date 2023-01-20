@@ -24,11 +24,17 @@ var _ types.MsgServer = msgServer{}
 
 // SoftwareUpgrade implements the Msg/SoftwareUpgrade Msg service.
 func (k msgServer) SoftwareUpgrade(goCtx context.Context, req *types.MsgSoftwareUpgrade) (*types.MsgSoftwareUpgradeResponse, error) {
-	if k.authority != req.Authority {
-		return nil, fmt.Errorf("invalid signer: expected %s got %s", k.authority, req.Authority)
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	authority := k.Keeper.GetAuthority(ctx)
+	if err := types.NewParams(authority).Validate(); err != nil {
+		return nil, err
 	}
 
-	ctx := sdk.UnwrapSDKContext(goCtx)
+	if authority != req.Authority {
+		return nil, fmt.Errorf("invalid signer: expected %s got %s", authority, req.Authority)
+	}
+
 	err := k.ScheduleUpgrade(ctx, req.Plan)
 	if err != nil {
 		return nil, err
@@ -39,11 +45,17 @@ func (k msgServer) SoftwareUpgrade(goCtx context.Context, req *types.MsgSoftware
 
 // CancelUpgrade implements the Msg/CancelUpgrade Msg service.
 func (k msgServer) CancelUpgrade(goCtx context.Context, req *types.MsgCancelUpgrade) (*types.MsgCancelUpgradeResponse, error) {
-	if k.authority != req.Authority {
-		return nil, fmt.Errorf("invalid signer: expected %s got %s", k.authority, req.Authority)
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	authority := k.Keeper.GetAuthority(ctx)
+	if err := types.NewParams(authority).Validate(); err != nil {
+		return nil, err
 	}
 
-	ctx := sdk.UnwrapSDKContext(goCtx)
+	if authority != req.Authority {
+		return nil, fmt.Errorf("invalid signer: expected %s got %s", authority, req.Authority)
+	}
+
 	k.ClearUpgradePlan(ctx)
 
 	return &types.MsgCancelUpgradeResponse{}, nil

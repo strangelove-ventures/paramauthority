@@ -1,9 +1,7 @@
 package types
 
-const (
-	// ModuleName defines the module name
-	ModuleName = "params"
+const AuthorityKey = "authority"
 
-	// QuerierRoute defines the module's query routing key
-	QuerierRoute = ModuleName
-)
+func KeyPrefix(p string) []byte {
+	return []byte(p)
+}

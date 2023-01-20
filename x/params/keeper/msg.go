@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 	types "github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 )
 
@@ -25,14 +26,19 @@ var _ types.MsgServer = msgServer{}
 
 // SoftwareUpgrade implements the Msg/SoftwareUpgrade Msg service.
 func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
-	if k.authority != req.Authority {
-		return nil, fmt.Errorf("expected %s got %s", k.authority, req.Authority)
-	}
-
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	authority := k.Keeper.GetAuthority(ctx)
+	if err := proposal.NewParams(authority).Validate(); err != nil {
+		return nil, err
+	}
+
+	if authority != req.Authority {
+		return nil, fmt.Errorf("expected %s got %s", authority, req.Authority)
+	}
+
 	for _, c := range req.ChangeProposal.Changes {
-		ss, ok := k.GetSubspace(c.Subspace)
+		ss, ok := k.Keeper.Keeper.GetSubspace(c.Subspace)
 		if !ok {
 			return nil, fmt.Errorf("unknown subspace, %s", c.Subspace)
 		}

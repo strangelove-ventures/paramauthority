@@ -7,9 +7,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// RegisterLegacyAminoCodec registers all necessary param module types with a given LegacyAmino codec.
+// RegisterLegacyAminoCodec registers the necessary concrete types
+// on the provided LegacyAmino codec. These types are used for Amino JSON serialization.
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&ParameterChangeProposal{}, "cosmos-sdk/ParameterChangeProposal", nil)
+	cdc.RegisterConcrete(&MsgUpdateParams{}, "cosmos-sdk/MsgUpdateParams", nil)
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
