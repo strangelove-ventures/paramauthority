@@ -27,7 +27,7 @@ func GetTxCmd() *cobra.Command {
 func NewCmdUpdateParams() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-params [subspace] [key] [value]",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(3),
 		Short: "Update subspace params",
 		Long:  "Update the value for a key in a params subspace",
 		RunE: func(cmd *cobra.Command, args []string) error {
