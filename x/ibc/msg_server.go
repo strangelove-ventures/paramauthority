@@ -5,22 +5,23 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	clientkeeper "github.com/cosmos/ibc-go/v3/modules/core/02-client/keeper"
 	clienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
 	"github.com/strangelove-ventures/paramauthority/x/ibc/types"
-	upgradekeeper "github.com/strangelove-ventures/paramauthority/x/upgrade/keeper"
 	upgradetypes "github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
 type msgServer struct {
-	upgradeKeeper upgradekeeper.Keeper
-	clientKeeper  clientkeeper.Keeper
+	authorityKeeper types.AuthorityKeeper
+	clientKeeper    types.ClientKeeper
 }
 
-func NewMsgServer(upgradeKeeper upgradekeeper.Keeper, clientKeeper clientkeeper.Keeper) types.MsgServer {
+func NewMsgServer(
+	authorityKeeper types.AuthorityKeeper,
+	clientKeeper types.ClientKeeper,
+) types.MsgServer {
 	return msgServer{
-		upgradeKeeper: upgradeKeeper,
-		clientKeeper:  clientKeeper,
+		authorityKeeper: authorityKeeper,
+		clientKeeper:    clientKeeper,
 	}
 }
 
@@ -29,7 +30,7 @@ var _ types.MsgServer = msgServer{}
 func (m msgServer) ClientUpdate(goCtx context.Context, req *types.MsgClientUpdate) (*types.MsgClientUpdateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	authority := m.upgradeKeeper.GetAuthority(ctx)
+	authority := m.authorityKeeper.GetAuthority(ctx)
 	if err := upgradetypes.NewParams(authority).Validate(); err != nil {
 		return nil, err
 	}
@@ -51,7 +52,7 @@ func (m msgServer) ClientUpdate(goCtx context.Context, req *types.MsgClientUpdat
 func (m msgServer) Upgrade(goCtx context.Context, req *types.MsgUpgrade) (*types.MsgUpgradeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	authority := m.upgradeKeeper.GetAuthority(ctx)
+	authority := m.authorityKeeper.GetAuthority(ctx)
 	if err := upgradetypes.NewParams(authority).Validate(); err != nil {
 		return nil, err
 	}
