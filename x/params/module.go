@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"math/rand"
 
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-
 	"github.com/gorilla/mux"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
+	"github.com/strangelove-ventures/paramauthority/x/params/keeper"
+	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -22,8 +23,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/params/simulation"
 	"github.com/cosmos/cosmos-sdk/x/params/types"
 	sdkproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
-	"github.com/strangelove-ventures/paramauthority/x/params/keeper"
-	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 )
 
 var (
@@ -53,7 +52,7 @@ func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 }
 
 // ValidateGenesis performs genesis state validation for the params module.
-func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, config client.TxEncodingConfig, _ json.RawMessage) error {
+func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, _ client.TxEncodingConfig, _ json.RawMessage) error {
 	return nil
 }
 
@@ -108,7 +107,7 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.Ra
 func (AppModule) Route() sdk.Route { return sdk.Route{} }
 
 // GenerateGenesisState performs a no-op.
-func (AppModule) GenerateGenesisState(simState *module.SimulationState) {}
+func (AppModule) GenerateGenesisState(_ *module.SimulationState) {}
 
 // QuerierRoute returns the x/param module's querier route name.
 func (AppModule) QuerierRoute() string { return types.QuerierRoute }
@@ -132,12 +131,12 @@ func (am AppModule) ProposalContents(simState module.SimulationState) []simtypes
 }
 
 // RandomizedParams creates randomized distribution param changes for the simulator.
-func (AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+func (AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 	return nil
 }
 
 // RegisterStoreDecoder doesn't register any type.
-func (AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {}
+func (AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(_ module.SimulationState) []simtypes.WeightedOperation {

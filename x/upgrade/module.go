@@ -7,6 +7,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
+	"github.com/strangelove-ventures/paramauthority/x/upgrade/keeper"
+	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -18,9 +20,6 @@ import (
 	sdkupgradecli "github.com/cosmos/cosmos-sdk/x/upgrade/client/cli"
 	sdkupgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-
-	"github.com/strangelove-ventures/paramauthority/x/upgrade/keeper"
-	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
 func init() {
@@ -51,8 +50,7 @@ func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 }
 
 // RegisterRESTRoutes registers all REST query handlers
-func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, r *mux.Router) {
-
+func (AppModuleBasic) RegisterRESTRoutes(_ client.Context, _ *mux.Router) {
 }
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the upgrade module.
@@ -130,7 +128,7 @@ func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 }
 
 // ValidateGenesis is always successful, as we ignore the value
-func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, config client.TxEncodingConfig, _ json.RawMessage) error {
+func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, _ client.TxEncodingConfig, _ json.RawMessage) error {
 	return nil
 }
 

@@ -1,9 +1,10 @@
 package keeper
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/strangelove-ventures/paramauthority/x/params/types"
 	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // SetParams sets the total set of params parameters.

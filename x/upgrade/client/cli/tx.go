@@ -2,12 +2,12 @@ package cli
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
 const (

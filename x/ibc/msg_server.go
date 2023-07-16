@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	clienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
 	"github.com/strangelove-ventures/paramauthority/x/ibc/types"
 	upgradetypes "github.com/strangelove-ventures/paramauthority/x/upgrade/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 type msgServer struct {
