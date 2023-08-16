@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package noble.authority.v1;
+
+option go_package = "github.com/noble-assets/paramauthority/x/authority/types";
+
+message GenesisState {
+  string authority = 1;
+}
