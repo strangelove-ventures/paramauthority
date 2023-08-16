@@ -89,7 +89,9 @@ func NewRootCmd() *cobra.Command {
 				return err
 			}
 
-			return server.InterceptConfigsPreRunHandler(cmd, serverCfg.DefaultConfigTemplate, serverCfg.DefaultConfig(), cmtCfg.DefaultConfig())
+			appConfig := serverCfg.DefaultConfig()
+			appConfig.MinGasPrices = "0stake"
+			return server.InterceptConfigsPreRunHandler(cmd, serverCfg.DefaultConfigTemplate, appConfig, cmtCfg.DefaultConfig())
 		},
 	}
 
