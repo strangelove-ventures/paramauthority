@@ -1,0 +1,7 @@
+- name: authority-simd
+  github-organization: noble-assets
+  github-repo: paramauthority
+  dockerfile: cosmos
+  build-target: make install
+  binaries:
+    - /go/bin/simd

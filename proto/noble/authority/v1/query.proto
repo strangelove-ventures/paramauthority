@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package noble.authority.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/noble-assets/paramauthority/x/authority/types";
+
+service Query {
+  rpc Authority(QueryAuthority) returns (QueryAuthorityResponse) {
+    option (google.api.http).get = "/noble/authority/v1/address";
+  }
+}
+
+// QueryAuthority is the Query/Authority request type.
+message QueryAuthority {}
+
+// QueryAuthorityResponse is the Query/Authority response type.
+message QueryAuthorityResponse {
+  string authority = 1;
+}
