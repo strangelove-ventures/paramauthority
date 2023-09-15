@@ -4,10 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
-	types "github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 type msgServer struct {
@@ -16,16 +15,16 @@ type msgServer struct {
 
 // NewMsgServerImpl returns an implementation of the upgrade MsgServer interface
 // for the provided Keeper.
-func NewMsgServerImpl(k Keeper) types.MsgServer {
+func NewMsgServerImpl(k Keeper) proposal.MsgServer {
 	return &msgServer{
 		Keeper: k,
 	}
 }
 
-var _ types.MsgServer = msgServer{}
+var _ proposal.MsgServer = msgServer{}
 
 // SoftwareUpgrade implements the Msg/SoftwareUpgrade Msg service.
-func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
+func (k msgServer) UpdateParams(goCtx context.Context, req *proposal.MsgUpdateParams) (*proposal.MsgUpdateParamsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	authority := k.Keeper.GetAuthority(ctx)
@@ -52,5 +51,5 @@ func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParam
 		}
 	}
 
-	return &types.MsgUpdateParamsResponse{}, nil
+	return &proposal.MsgUpdateParamsResponse{}, nil
 }

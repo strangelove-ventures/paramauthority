@@ -2,13 +2,13 @@ package cli
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdkparamstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	sdkproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
-	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 )
 
 // GetTxCmd returns the transaction commands for this module

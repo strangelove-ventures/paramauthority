@@ -5,9 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-var (
-	_, _ sdk.Msg = &MsgSoftwareUpgrade{}, &MsgCancelUpgrade{}
-)
+var _, _ sdk.Msg = &MsgSoftwareUpgrade{}, &MsgCancelUpgrade{}
 
 // Route implements the LegacyMsg interface.
 func (m MsgSoftwareUpgrade) Route() string { return sdk.MsgTypeURL(&m) }

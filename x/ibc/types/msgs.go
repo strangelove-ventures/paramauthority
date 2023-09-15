@@ -1,14 +1,13 @@
 package types
 
 import (
+	clienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	clienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
 )
 
-var (
-	_ sdk.Msg = &MsgClientUpdate{}
-)
+var _ sdk.Msg = &MsgClientUpdate{}
 
 // Route implements the LegacyMsg interface.
 func (m *MsgClientUpdate) Route() string { return sdk.MsgTypeURL(m) }
@@ -43,16 +42,16 @@ func (m *MsgClientUpdate) GetSigners() []sdk.AccAddress {
 }
 
 // ValidateBasic runs basic stateless validity checks
-func (up *MsgUpgrade) ValidateBasic() error {
-	if err := up.Plan.ValidateBasic(); err != nil {
+func (m *MsgUpgrade) ValidateBasic() error {
+	if err := m.Plan.ValidateBasic(); err != nil {
 		return err
 	}
 
-	if up.UpgradedClientState == nil {
+	if m.UpgradedClientState == nil {
 		return sdkerrors.Wrap(clienttypes.ErrInvalidUpgradeProposal, "upgraded client state cannot be nil")
 	}
 
-	_, err := clienttypes.UnpackClientState(up.UpgradedClientState)
+	_, err := clienttypes.UnpackClientState(m.UpgradedClientState)
 	if err != nil {
 		return sdkerrors.Wrap(err, "failed to unpack upgraded client state")
 	}

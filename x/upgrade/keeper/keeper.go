@@ -1,18 +1,17 @@
 package keeper
 
 import (
+	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-
 	"github.com/cosmos/cosmos-sdk/codec"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	sdkparamstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	xp "github.com/cosmos/cosmos-sdk/x/upgrade/exported"
 	sdkupgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
 )
 
 // Deprecated: UpgradeInfoFileName file to store upgrade information

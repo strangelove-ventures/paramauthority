@@ -5,15 +5,16 @@ import (
 	"os"
 	"strconv"
 
+	clienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
+	"github.com/cosmos/ibc-go/v3/modules/core/exported"
+	"github.com/spf13/cobra"
+	"github.com/strangelove-ventures/paramauthority/x/ibc/types"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/codec"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	clienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
-	"github.com/cosmos/ibc-go/v3/modules/core/exported"
-	"github.com/spf13/cobra"
-	"github.com/strangelove-ventures/paramauthority/x/ibc/types"
 )
 
 // GetTxCmd returns the transaction commands for this module
@@ -124,7 +125,7 @@ func NewCmdSubmitUpgradeProposal() *cobra.Command {
 
 			from := clientCtx.GetFromAddress()
 
-			any, err := clienttypes.PackClientState(clientState)
+			anyState, err := clienttypes.PackClientState(clientState)
 			if err != nil {
 				return err
 			}
@@ -132,7 +133,7 @@ func NewCmdSubmitUpgradeProposal() *cobra.Command {
 			msg := &types.MsgUpgrade{
 				Authority:           from.String(),
 				Plan:                plan,
-				UpgradedClientState: any,
+				UpgradedClientState: anyState,
 			}
 
 			if err = msg.ValidateBasic(); err != nil {
