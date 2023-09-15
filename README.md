@@ -7,3 +7,5 @@ Override modules for `params` and `upgrades` Cosmos SDK v0.45.x modules, with an
 `params` has an additional message, `MsgUpdateParams`, which allows the authority to update params.
 
 `upgrade` has additional messages `MsgSoftwareUpgrade` and `MsgCancelUpgrade` which allow the authority to schedule and cancel scheduled upgrades.
+
+`ibc-authority` is a slim `AppModuleBasic` with messages `MsgClientUpdate` and `MsgUpgrade`, which allow the authority to substitute and upgrade light clients.
