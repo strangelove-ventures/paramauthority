@@ -16,6 +16,19 @@ import (
 	"github.com/strangelove-ventures/paramauthority/x/ibc/types"
 )
 
+// GetTxCmd returns the transaction commands for this module
+func GetTxCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   types.ModuleName,
+		Short: "IBC authority transaction subcommands",
+	}
+
+	cmd.AddCommand(NewCmdSubmitUpdateClientProposal())
+	cmd.AddCommand(NewCmdSubmitUpgradeProposal())
+
+	return cmd
+}
+
 // NewCmdSubmitUpdateClientProposal implements a command handler for submitting an update IBC client proposal transaction.
 func NewCmdSubmitUpdateClientProposal() *cobra.Command {
 	cmd := &cobra.Command{
