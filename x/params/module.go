@@ -17,11 +17,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/cosmos/cosmos-sdk/x/params/client/cli"
+	sdkparamscli "github.com/cosmos/cosmos-sdk/x/params/client/cli"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	"github.com/cosmos/cosmos-sdk/x/params/simulation"
 	"github.com/cosmos/cosmos-sdk/x/params/types"
 	sdkproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
+	"github.com/strangelove-ventures/paramauthority/x/params/client/cli"
 	"github.com/strangelove-ventures/paramauthority/x/params/keeper"
 	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
 )
@@ -66,11 +67,13 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 }
 
 // GetTxCmd returns no root tx command for the params module.
-func (AppModuleBasic) GetTxCmd() *cobra.Command { return nil }
+func (AppModuleBasic) GetTxCmd() *cobra.Command {
+	return cli.GetTxCmd()
+}
 
 // GetQueryCmd returns no root query command for the params module.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return cli.NewQueryCmd()
+	return sdkparamscli.NewQueryCmd()
 }
 
 func (am AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) {
