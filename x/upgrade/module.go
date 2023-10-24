@@ -3,25 +3,25 @@ package upgrade
 import (
 	"context"
 	"encoding/json"
-
-	"github.com/gorilla/mux"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/spf13/cobra"
-	abci "github.com/tendermint/tendermint/abci/types"
+	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdkupgrademodule "github.com/cosmos/cosmos-sdk/x/upgrade"
 	sdkupgradecli "github.com/cosmos/cosmos-sdk/x/upgrade/client/cli"
 	sdkupgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	sdkupgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-
+	"github.com/gorilla/mux"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/spf13/cobra"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/client/cli"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/keeper"
 	"github.com/strangelove-ventures/paramauthority/x/upgrade/types"
+	abci "github.com/tendermint/tendermint/abci/types"
 )
 
 func init() {
@@ -33,8 +33,9 @@ const (
 )
 
 var (
-	_ module.AppModule      = AppModule{}
-	_ module.AppModuleBasic = AppModuleBasic{}
+	_ module.AppModule           = AppModule{}
+	_ module.AppModuleBasic      = AppModuleBasic{}
+	_ module.AppModuleSimulation = AppModule{}
 )
 
 // AppModuleBasic implements the sdk.AppModuleBasic interface
@@ -154,4 +155,28 @@ func (AppModule) ConsensusVersion() uint64 { return consensusVersion }
 // CONTRACT: this is registered in BeginBlocker *before* all other modules' BeginBlock functions
 func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
 	sdkupgrademodule.BeginBlocker(am.keeper.Keeper, ctx, req)
+}
+
+func (am AppModule) GenerateGenesisState(simState *module.SimulationState) {
+	authority, _ := simtypes.RandomAcc(simState.Rand, simState.Accounts)
+
+	genesis := types.GenesisState{
+		Params: types.NewParams(authority.Address.String()),
+	}
+
+	simState.GenState[sdkupgradetypes.ModuleName] = simState.Cdc.MustMarshalJSON(&genesis)
+}
+
+func (am AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedProposalContent {
+	return nil
+}
+
+func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
+	return nil
+}
+
+func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
+
+func (am AppModule) WeightedOperations(_ module.SimulationState) []simtypes.WeightedOperation {
+	return nil
 }

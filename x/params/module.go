@@ -5,12 +5,6 @@ import (
 	"encoding/json"
 	"math/rand"
 
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-
-	"github.com/gorilla/mux"
-	"github.com/spf13/cobra"
-	abci "github.com/tendermint/tendermint/abci/types"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -22,9 +16,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/params/simulation"
 	"github.com/cosmos/cosmos-sdk/x/params/types"
 	sdkproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
+	"github.com/gorilla/mux"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/spf13/cobra"
 	"github.com/strangelove-ventures/paramauthority/x/params/client/cli"
 	"github.com/strangelove-ventures/paramauthority/x/params/keeper"
 	"github.com/strangelove-ventures/paramauthority/x/params/types/proposal"
+	abci "github.com/tendermint/tendermint/abci/types"
 )
 
 var (
@@ -111,7 +109,15 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.Ra
 func (AppModule) Route() sdk.Route { return sdk.Route{} }
 
 // GenerateGenesisState performs a no-op.
-func (AppModule) GenerateGenesisState(simState *module.SimulationState) {}
+func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
+	authority, _ := simtypes.RandomAcc(simState.Rand, simState.Accounts)
+
+	genesis := proposal.GenesisState{
+		Params: proposal.NewParams(authority.Address.String()),
+	}
+
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&genesis)
+}
 
 // QuerierRoute returns the x/param module's querier route name.
 func (AppModule) QuerierRoute() string { return types.QuerierRoute }
